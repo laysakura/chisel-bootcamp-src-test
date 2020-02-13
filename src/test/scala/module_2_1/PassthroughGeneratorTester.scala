@@ -1,6 +1,7 @@
 package module_2_1
 
-import chisel3.iotesters.{ChiselFlatSpec, Driver, PeekPokeTester}
+import chisel3.iotesters.{ChiselFlatSpec, PeekPokeTester}
+import chisel3.iotesters
 
 import scala.math.pow
 
@@ -15,7 +16,10 @@ class PassthroughGeneratorTester extends ChiselFlatSpec {
   for (backendName <- backendNames) {
     "PassthroughGenerator" should s"pass-through input (with $backendName)" in {
       val width = 4
-      Driver(() => new PassthroughGenerator(width), backendName) { c =>
+      iotesters.Driver.execute(Array("--is-verbose",
+                                     "--backend-name",
+                                     backendName),
+                               () => new PassthroughGenerator(width)) { c =>
         new PeekPokeTester(c) {
           (0 until pow(2, width).toInt).foreach { v =>
             poke(c.io.in, v)
