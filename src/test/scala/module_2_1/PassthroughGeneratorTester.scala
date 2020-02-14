@@ -9,11 +9,11 @@ class PassthroughGeneratorTester extends ChiselFlatSpecBase {
   "PassthroughGenerator" should "pass-through input" in {
     val width = 4
 
-    test(() => new PassthroughGenerator(width)) { c =>
-      new PeekPokeTester(c) {
+    test(() => new PassthroughGenerator(width)) { d =>
+      new PeekPokeTester(d) {
         (0 until pow(2, width).toInt).foreach { v =>
-          poke(c.io.in, v)
-          expect(c.io.out, v)
+          poke(d.io.in, v)
+          expect(d.io.out, v)
         }
       }
     }
