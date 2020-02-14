@@ -17,10 +17,8 @@ trait ChiselFlatSpecBase extends ChiselFlatSpec {
     * @param testerGen A peek-poke tester with test
     * @tparam T Type of device
     */
-  protected def test[T <: MultiIOModule](
-      device: () => T,
-      testerGen: T => PeekPokeTester[T]
-  ): Unit =
+  protected def test[T <: MultiIOModule](device: () => T)(
+      testerGen: T => PeekPokeTester[T]): Unit =
     backendNames.foreach { backendName =>
       Driver.execute(Array("--is-verbose", "--backend-name", backendName),
                      device)(testerGen) should be(true)
