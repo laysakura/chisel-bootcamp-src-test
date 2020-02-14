@@ -1,26 +1,9 @@
 package module_2_1
 
-import chisel3.{iotesters, MultiIOModule}
-import chisel3.iotesters.{ChiselFlatSpec, PeekPokeTester}
+import chisel3.iotesters.PeekPokeTester
+import testbase.ChiselFlatSpecBase
 
 import scala.math.pow
-
-trait ChiselFlatSpecBase extends ChiselFlatSpec {
-  protected val backendNames: Array[String] =
-    if (firrtl.FileUtils.isCommandAvailable(Seq("verilator", "--version")))
-      Array("firrtl", "verilator")
-    else
-      Array("firrtl")
-
-  protected def test[T <: MultiIOModule](
-      cm: () => T,
-      testerGen: T => PeekPokeTester[T]): Unit =
-    backendNames.foreach { backendName =>
-      iotesters.Driver
-        .execute(Array("--is-verbose", "--backend-name", backendName), cm)(
-          testerGen) should be(true)
-    }
-}
 
 class PassthroughGeneratorTester extends ChiselFlatSpecBase {
   "PassthroughGenerator" should "pass-through input" in {
